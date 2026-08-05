@@ -464,6 +464,10 @@ public abstract class IDevice
 
     public IEnumerable<ButtonFlags> OEMButtons => OEMChords.Where(chord => !chord.silenced).SelectMany(chord => chord.state.Buttons).Distinct();
 
+    // Lets devices whose integrated controller has no unique VID/PID select an established
+    // controller implementation without adding model checks to ControllerManager.
+    public virtual IController? CreateController(PnPDetails details) => null;
+
     public virtual bool IsSupported => true;
 
     public Layout DefaultLayout { get; set; } = LayoutTemplate.DefaultLayout.Layout;
@@ -740,6 +744,9 @@ public abstract class IDevice
                         case "ONEXPLAYER APEX":
                         case "ONEXPLAYERAPEX":
                             device = new OneXPlayerApex();
+                            break;
+                        case "ONEXPLAYER X2":
+                            device = new OneXPlayerX2();
                             break;
                         case "ONEXPLAYER G1 i":
                             device = new OneXPlayerG1Intel();
